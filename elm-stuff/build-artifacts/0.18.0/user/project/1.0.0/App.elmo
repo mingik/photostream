@@ -53,23 +53,23 @@ var _user$project$App$initialModel = {
 	photos: {
 		ctor: '::',
 		_0: {
-			url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '1.jpg')
+			url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '1.jpeg')
 		},
 		_1: {
 			ctor: '::',
 			_0: {
-				url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '2.jpg')
+				url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '2.jpeg')
 			},
 			_1: {
 				ctor: '::',
 				_0: {
-					url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '3.jpg')
+					url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '3.jpeg')
 				},
 				_1: {ctor: '[]'}
 			}
 		}
 	},
-	selectedUrl: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '1.jpg'),
+	selectedUrl: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '1.jpeg'),
 	chosenSize: _user$project$App$Medium
 };
 var _user$project$App$Small = {ctor: 'Small'};

@@ -39,11 +39,11 @@ urlPrefix =
 initialModel : Model
 initialModel =
     { photos = 
-          [ { url = urlPrefix ++ "1.jpg" }
-          , { url = urlPrefix ++ "2.jpg" }
-          , { url = urlPrefix ++ "3.jpg" }
+          [ { url = urlPrefix ++ "1.jpeg" }
+          , { url = urlPrefix ++ "2.jpeg" }
+          , { url = urlPrefix ++ "3.jpeg" }
           ]
-    , selectedUrl = urlPrefix ++ "1.jpg"
+    , selectedUrl = urlPrefix ++ "1.jpeg"
     , chosenSize = Medium
     }
              
