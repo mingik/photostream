@@ -1,0 +1,408 @@
+var _user$project$App$removeCat = function (photo) {
+	return !A2(_elm_lang$core$String$contains, 'giphy', photo.url);
+};
+var _user$project$App$decodeImg = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'data',
+		_1: {
+			ctor: '::',
+			_0: 'image_url',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _user$project$App$sizeToString = function (size) {
+	var _p0 = size;
+	switch (_p0.ctor) {
+		case 'Small':
+			return 'small';
+		case 'Medium':
+			return 'med';
+		default:
+			return 'large';
+	}
+};
+var _user$project$App$photoArray = function (model) {
+	return _elm_lang$core$Array$fromList(model.photos);
+};
+var _user$project$App$getPhotoUrl = F2(
+	function (index, model) {
+		var _p1 = A2(
+			_elm_lang$core$Array$get,
+			index,
+			_user$project$App$photoArray(model));
+		if (_p1.ctor === 'Just') {
+			return _p1._0.url;
+		} else {
+			return '';
+		}
+	});
+var _user$project$App$urlPrefix = './images/';
+var _user$project$App$Photo = function (a) {
+	return {url: a};
+};
+var _user$project$App$Model = F3(
+	function (a, b, c) {
+		return {photos: a, selectedUrl: b, chosenSize: c};
+	});
+var _user$project$App$Large = {ctor: 'Large'};
+var _user$project$App$Medium = {ctor: 'Medium'};
+var _user$project$App$initialModel = {
+	photos: {
+		ctor: '::',
+		_0: {
+			url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '1.jpg')
+		},
+		_1: {
+			ctor: '::',
+			_0: {
+				url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '2.jpg')
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					url: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '3.jpg')
+				},
+				_1: {ctor: '[]'}
+			}
+		}
+	},
+	selectedUrl: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '1.jpg'),
+	chosenSize: _user$project$App$Medium
+};
+var _user$project$App$Small = {ctor: 'Small'};
+var _user$project$App$SetSize = function (a) {
+	return {ctor: 'SetSize', _0: a};
+};
+var _user$project$App$viewSizeChooser = function (size) {
+	return A2(
+		_elm_lang$html$Html$label,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('radio'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$name('size'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(
+								_user$project$App$SetSize(size)),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(
+					_user$project$App$sizeToString(size)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$App$RemoveCats = {ctor: 'RemoveCats'};
+var _user$project$App$NewImg = function (a) {
+	return {ctor: 'NewImg', _0: a};
+};
+var _user$project$App$fetchImage = function () {
+	var url = 'https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cats';
+	return A2(
+		_elm_lang$http$Http$send,
+		_user$project$App$NewImg,
+		A2(_elm_lang$http$Http$get, url, _user$project$App$decodeImg));
+}();
+var _user$project$App$AddCat = {ctor: 'AddCat'};
+var _user$project$App$ChosenCat = function (a) {
+	return {ctor: 'ChosenCat', _0: a};
+};
+var _user$project$App$chooseCat = function (model) {
+	return A2(
+		_elm_lang$core$Random$generate,
+		_user$project$App$ChosenCat,
+		A2(
+			_elm_lang$core$Random$int,
+			0,
+			_elm_lang$core$Array$length(
+				_user$project$App$photoArray(model)) - 1));
+};
+var _user$project$App$update = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'SelectByIndex':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							selectedUrl: A2(_user$project$App$getPhotoUrl, _p2._0, model)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SelectByUrl':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{selectedUrl: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChooseCat':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _user$project$App$chooseCat(model)
+				};
+			case 'ChosenCat':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							selectedUrl: function () {
+								var _p3 = A2(
+									_elm_lang$core$Array$get,
+									_p2._0,
+									_user$project$App$photoArray(model));
+								if (_p3.ctor === 'Just') {
+									return _p3._0.url;
+								} else {
+									return '';
+								}
+							}()
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'AddCat':
+				return {ctor: '_Tuple2', _0: model, _1: _user$project$App$fetchImage};
+			case 'NewImg':
+				if (_p2._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								photos: A2(
+									_elm_lang$core$Basics_ops['++'],
+									model.photos,
+									{
+										ctor: '::',
+										_0: {url: _p2._0._0},
+										_1: {ctor: '[]'}
+									})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'RemoveCats':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							photos: A2(_elm_lang$core$List$filter, _user$project$App$removeCat, model.photos),
+							selectedUrl: A2(_elm_lang$core$Basics_ops['++'], _user$project$App$urlPrefix, '2.jpg')
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{chosenSize: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$App$ChooseCat = {ctor: 'ChooseCat'};
+var _user$project$App$SelectByIndex = function (a) {
+	return {ctor: 'SelectByIndex', _0: a};
+};
+var _user$project$App$SelectByUrl = function (a) {
+	return {ctor: 'SelectByUrl', _0: a};
+};
+var _user$project$App$viewThumbnail = F2(
+	function (selectedUrl, thumbnail) {
+		return A2(
+			_elm_lang$html$Html$img,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$src(thumbnail.url),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$classList(
+						{
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'selected',
+								_1: _elm_lang$core$Native_Utils.eq(selectedUrl, thumbnail.url)
+							},
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_user$project$App$SelectByUrl(thumbnail.url)),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{ctor: '[]'});
+	});
+var _user$project$App$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('content'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h1,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Cats Stream'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_user$project$App$ChooseCat),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('ChooseCat!'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$App$AddCat),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('AddCat!'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$App$RemoveCats),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('RemoveCats'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$h3,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Thumbnail Size:'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$id('choose-size'),
+										_1: {ctor: '[]'}
+									},
+									A2(
+										_elm_lang$core$List$map,
+										_user$project$App$viewSizeChooser,
+										{
+											ctor: '::',
+											_0: _user$project$App$Small,
+											_1: {
+												ctor: '::',
+												_0: _user$project$App$Medium,
+												_1: {
+													ctor: '::',
+													_0: _user$project$App$Large,
+													_1: {ctor: '[]'}
+												}
+											}
+										})),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$id('thumbnails'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class(
+													_user$project$App$sizeToString(model.chosenSize)),
+												_1: {ctor: '[]'}
+											}
+										},
+										A2(
+											_elm_lang$core$List$map,
+											_user$project$App$viewThumbnail(model.selectedUrl),
+											model.photos)),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$img,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('large'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$src(model.selectedUrl),
+													_1: {ctor: '[]'}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$App$main = _elm_lang$html$Html$program(
+	{
+		init: {ctor: '_Tuple2', _0: _user$project$App$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
+		view: _user$project$App$view,
+		update: _user$project$App$update,
+		subscriptions: function (model) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	})();
